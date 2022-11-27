@@ -30,6 +30,7 @@ Missing features:
 * Underspecified features of demangling spec
 * wstring and dstring literals
 * assosciative array literals
+* inner functions are not demangled properly fully (but it is okish)
 
 Building
 ========

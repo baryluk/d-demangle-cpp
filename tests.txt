@@ -1,3 +1,8 @@
+# Beyond this tests, it is useful to do a full demangle of big libraries, for example:
+# nm -D /usr/lib/x86_64-linux-gnu/libgdruntime.so.1.0.0 | awk '$3 ~ /^_D/ {print $3;}' | xargs timeout --verbose 1s ./d-demangle --verbose
+# nm -D /usr/lib/x86_64-linux-gnu/libgphobos.so.1.0.0 | awk '$3 ~ /^_D/ {print $3;}' | xargs timeout --verbose 1s ./d-demangle --verbose
+
+
 # Note: Some of the expected outputs here are actually wrong.
 # They are here just to detect regression.
 # If you modify code and the demangling actually improves,
@@ -19,8 +24,9 @@ _D3std4conv__T4textTAyaTQeTQhZQqFNaNbNfQtQvQxZQBa immutable char[] std.conv.text
 _D3std6format15FormatException6__ctorMFNaNbNiNfAyaQdmC6object9ThrowableZCQCtQCsQCo std.format.FormatException std.format.FormatException__ctor(immutable char[], immutable char[], ulong, object.Throwable) pure nothrow @nogc @safe
 _D3std9algorithm8mutation__T11moveEmplaceTASQBq8datetime8timezone13PosixTimeZone14TempTransitionZQCrFNaNbNiKQCoKQCsZv void std.algorithm.mutation.moveEmplace!(std.datetime.timezone.PosixTimeZone.TempTransition[])moveEmplace(ref std.datetime.timezone.PosixTimeZone.TempTransition[], ref std.datetime.timezone.PosixTimeZone.TempTransition[]) pure nothrow @nogc
 
-# This currently causes infinite loop:
+# This currently causes infinite loop: (c++filt also struggles with this)
 #_D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm
+#_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi
 
 # Inner function in a method.
 _D7example1X5cloneMxFCQuQoQfZ1xMFNaNbNiNfZi int x() pure nothrow @nogc @safe example.Xconst clone(example.X.)
@@ -33,3 +39,25 @@ _D7example1X5cloneMxFCQuQoQfZQi example.X. example.Xconst clone(example.X.)
 # Static class method:
 _D7example1X5cloneFCQsQmQfZQi example.X. example.Xclone(example.X.)
 # Should be: example.X example.X.clone(example.X, example.X)
+
+# This is wrong
+_D2gc4impl12conservative2gc14ConservativeGC200__T9runLockedS78_D2gc4impl12conservative2gc14ConservativeGC12extendNoSyncMFNbPvmmxC8TypeInfoZmS40_D2gc4impl12conservative2gc10extendTimelS40_D2gc4impl12conservative2gc10numExtendslTPvTmTmTxC8TypeInfoZ9runLockedMFNbKPvKmKmKxC8TypeInfoZm ulong gc.impl.conservative.gc.ConservativeGC.__T9runLockedS78_D2gc4impl12conservative2gc14ConservativeGC12extendNoSyncMFNbPvmmxC8TypeInfoZmS40_D2gc4impl12conservative2gc10extendTimelS40_D2gc4impl12conservative2gc10numExtendslTPvTmTmTxC8TypeInfoZrunLocked(ref void*, ref ulong, ref ulong, ref const TypeInfo) nothrow
+# This is wrong
+_D2gc4impl12conservative2gc14ConservativeGC187__T9runLockedS85_D2gc4impl12conservative2gc14ConservativeGC11queryNoSyncMFNbPvZS4core6memory8BlkInfo_S38_D2gc4impl12conservative2gc9otherTimelS38_D2gc4impl12conservative2gc9numOtherslTPvZ9runLockedMFNbKPvZS4core6memory8BlkInfo_ core.memory.BlkInfo_ gc.impl.conservative.gc.ConservativeGC.__T9runLockedS85_D2gc4impl12conservative2gc14ConservativeGC11queryNoSyncMFNbPvZS4core6memory8BlkInfo_S38_D2gc4impl12conservative2gc9otherTimelS38_D2gc4impl12conservative2gc9numOtherslTPvZrunLocked(ref void*) nothrow
+
+_D2gc4impl12conservative2gc14ConservativeGC13runFinalizersMFNbxAvZ2goFNbPS2gc4impl12conservative2gc3GcxxAvZv void go(gc.impl.conservative.gc.Gcx*, const void[]) nothrow gc.impl.conservative.gc.ConservativeGCrunFinalizers(const void[]) nothrow
+_D2gc4impl12conservative2gc14ConservativeGC7setAttrMFNbPvkZ2goFNbPS2gc4impl12conservative2gc3GcxPvkZk uint go(gc.impl.conservative.gc.Gcx*, void*, uint) nothrow gc.impl.conservative.gc.ConservativeGCsetAttr(void*, uint) nothrow
+_D2gc2os12os_mem_unmapFNbPvmZi int gc.osos_mem_unmap(void*, ulong) nothrow
+
+# This could be better:
+_D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap6removeMFNbNiS2gc11gcinterface4RootZv void rt.util.container.treap.__T5TreapTS2gc11gcinterface4RootZ.Treapremove(gc.gcinterface.Root) nothrow @nogc
+# Should be (+types): rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.remove(gc.gcinterface.Root)
+
+# Causes infinite loop
+# _D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap7opApplyMFNbMDFNbKS2gc11gcinterface4RootZiZi
+# Should be (+types): rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.opApply(scope int(ref gc.gcinterface.Root) nothrow delegate)
+
+# Input: _D6object9Throwable8toStringMxFMDFxAaZvZv
+# timeout: sending signal TERM to command ‘./d-demangle’
+# $ c++filt -s dlang _D6object9Throwable8toStringMxFMDFxAaZvZv
+# object.Throwable.toString(scope void(const(char[])) delegate) const

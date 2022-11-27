@@ -21,3 +21,15 @@ _D3std9algorithm8mutation__T11moveEmplaceTASQBq8datetime8timezone13PosixTimeZone
 
 # This currently causes infinite loop:
 #_D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm
+
+# Inner function in a method.
+_D7example1X5cloneMxFCQuQoQfZ1xMFNaNbNiNfZi int x() pure nothrow @nogc @safe example.Xconst clone(example.X.)
+# Should be: pure nothrow @nogc @safe int example.X.clone(example.X, example.X).x()
+
+# Class method (requires this)
+_D7example1X5cloneMxFCQuQoQfZQi example.X. example.Xconst clone(example.X.)
+# Should be: const example.X example.X.clone(example.X, example.X):
+
+# Static class method:
+_D7example1X5cloneFCQsQmQfZQi example.X. example.Xclone(example.X.)
+# Should be: example.X example.X.clone(example.X, example.X)

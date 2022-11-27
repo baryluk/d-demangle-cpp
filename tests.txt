@@ -1,0 +1,23 @@
+# Note: Some of the expected outputs here are actually wrong.
+# They are here just to detect regression.
+# If you modify code and the demangling actually improves,
+# please do fix expectations here to follow.
+
+_D3std5stdio__T8writeflnTaTiZQoFNfxAaiZv void std.stdio.writefln!(char, int)writefln(const char[], int) @safe
+_D3rcu__T3RCUTSQn1AZQl15reader_accessorMFNbZSQBr__TQBqTQBpZQBy12RCU_Accessor rcu.RCU!(rcu.A).RCU.RCU_Accessor rcu.RCU!(rcu.A).RCUreader_accessor() nothrow
+_D3std8datetime9stopwatch9StopWatch6__ctorMFNbNcNiNfEQBz8typecons__T4FlagVAyaa9_6175746f5374617274ZQBfZSQDyQDxQDrQDk std.datetime.stopwatch.StopWatch std.datetime.stopwatch.StopWatch__ctor(std.typecons.Flag!("autoStart").Flag) nothrow ref @nogc @safe
+_D4core4time8Duration__T8opBinaryVAyaa1_2bTSQBqQBoQBmZQBeMxFNaNbNiNfQzZQBc core.time.Duration core.time.Duration.opBinary!("+", core.time.Duration)const opBinary(core.time.Duration) pure nothrow @nogc @safe
+_D4core4sync5mutex5Mutex__T12lock_nothrowTOCQBqQBoQBmQBjZQBeMOFNbNiNeZv void core.sync.mutex.Mutex.lock_nothrow!(shared core.sync.mutex.Mutex)shared lock_nothrow() nothrow @nogc trusted
+_D3std6random__T7uniformVAyaa2_5b29TiTiTSQBnQBm__T21MersenneTwisterEngineTkVmi32Vmi624Vmi397Vmi31Vki2567483615Vmi11Vki4294967295Vmi7Vki2636928640Vmi15Vki4022730752Vmi18Vki1812433253ZQFcZQGoFNaNfiiKQGbZi int std.random.uniform!("[)", int, int, std.random.MersenneTwisterEngine!(uint, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u).MersenneTwisterEngine)uniform(int, int, ref std.random.MersenneTwisterEngine!(uint, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u).MersenneTwisterEngine) pure @safe
+_D3std5array__TQjTSQr5range__T4TakeTSQBjQt__T9GeneratorS_D3rcu8gen_listFZ9__lambda1FNfZiZQBsZQClZQDnFNfQDhZAi int[] std.array.array!(std.range.Take!(std.range.Generator!(int __lambda1() @safe rcugen_list()).Generator).Take)array(std.range.Take!(std.range.Generator!(int __lambda1() @safe rcugen_list()).Generator).Take) @safe
+
+_D3std5range__T9GeneratorS_D3rcu8gen_listFZ9__lambda1FNfZiZQBs8popFrontMFNfZv void std.range.Generator!(int __lambda1() @safe rcugen_list()).GeneratorpopFront() @safe
+# Should be (we were having that in the future): void std.range.Generator!(int __lambda1() @safe rcugen_list()).popFront() @safe
+
+_D3rcu3rndS3std6random__T21MersenneTwisterEngineTkVmi32Vmi624Vmi397Vmi31Vki2567483615Vmi11Vki4294967295Vmi7Vki2636928640Vmi15Vki4022730752Vmi18Vki1812433253ZQFc std.random.MersenneTwisterEngine!(uint, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u).MersenneTwisterEngine rcu.rnd
+_D3std4conv__T4textTAyaTQeTQhZQqFNaNbNfQtQvQxZQBa immutable char[] std.conv.text!(immutable char[], immutable char[], immutable char[])text(immutable char[], immutable char[], immutable char[]) pure nothrow @safe
+_D3std6format15FormatException6__ctorMFNaNbNiNfAyaQdmC6object9ThrowableZCQCtQCsQCo std.format.FormatException std.format.FormatException__ctor(immutable char[], immutable char[], ulong, object.Throwable) pure nothrow @nogc @safe
+_D3std9algorithm8mutation__T11moveEmplaceTASQBq8datetime8timezone13PosixTimeZone14TempTransitionZQCrFNaNbNiKQCoKQCsZv void std.algorithm.mutation.moveEmplace!(std.datetime.timezone.PosixTimeZone.TempTransition[])moveEmplace(ref std.datetime.timezone.PosixTimeZone.TempTransition[], ref std.datetime.timezone.PosixTimeZone.TempTransition[]) pure nothrow @nogc
+
+# This currently causes infinite loop:
+#_D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm

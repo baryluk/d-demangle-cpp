@@ -248,7 +248,6 @@ std::string LNameOrBackref(const std::string &s, size_t *offset, Refs *refs) {
   }
 }
 
-
 unsigned char hexdigit(unsigned char c) {
   if ('0' <= c && c <= '9') {
     return c - '0';
@@ -256,9 +255,9 @@ unsigned char hexdigit(unsigned char c) {
   if ('A' <= c && c <= 'F') {
     return c - 'A' + 10;
   }
-  if ('a' <= c && c <= 'f') {  // This is not documented. But CharWidth Number _
-                               // HexDigits is using lower case digits. Instead
-                               // of upper case as indicate in the grammar.
+  // This is not documented. But CharWidth Number _ HexDigits is using lower
+  // case digits. Instead of upper case as indicate in the grammar.
+  if ('a' <= c && c <= 'f') {
     return c - 'a' + 10;
   }
   throw std::runtime_error(std::string("Invalid hex digit ") +
@@ -284,7 +283,8 @@ std::string hexfloat(const std::string &s, size_t *offset) {
   std::string mantissa;
   while (canread1(s, offset) && s[*offset] != 'P') {
     const unsigned char h = s[*(offset++)];
-    const unsigned char h_value = hexdigit(h);  // Just run to verify it is hex.
+    // Just run to verify it is hex.
+    const unsigned char h_value = hexdigit(h);
     (void)h_value;
     mantissa += h;
   }
@@ -305,7 +305,8 @@ std::string hexfloat(const std::string &s, size_t *offset) {
     if (exponent_negative) {
       ret += '-';
     } else {
-      ret += '+';  // optional, but lets be explicit.
+      // optional, but lets be explicit.
+      ret += '+';
     }
     ret += std::to_string(e);
   }
@@ -396,8 +397,8 @@ std::string value0(const std::string &s, size_t *offset, Refs *refs,
   }
   if (startswith(s, 'A', offset)) {
     bool assoc = true;
-    if (type_hint[type_hint.size() - 2] ==
-        '[') {  // HACK. Detects "[]" to detect dynamic array.
+    // HACK. Detects "[]" to detect dynamic array.
+    if (type_hint[type_hint.size() - 2] == '[') {
       // TODO(baryluk): Handle static arrays, and multilevel arrays.
       assoc = false;
     }
@@ -426,8 +427,8 @@ std::string value0(const std::string &s, size_t *offset, Refs *refs,
   }
   if (startswith(s, 'S', offset)) {
     if (startswith(s, "_D", offset)) {
-      std::string rr =
-          qualified_name(s, offset, refs);  // Does it uses own refs?
+      // Does it uses own refs?
+      std::string rr = qualified_name(s, offset, refs);
       return rr;
     }
     // Struct literal
@@ -505,8 +506,9 @@ std::string value0(const std::string &s, size_t *offset, Refs *refs,
       }
       *offset += 2;
     }
-    ret += "\"";
-    // ret += "c"; // postfix (optional for 1-byte strings)
+    ret += '"';
+    // postfix (optional for 1-byte strings)
+    // ret += "c";
     return ret;
   }
   if (startswith(s, 'w', offset)) {
@@ -543,13 +545,6 @@ std::string value(const std::string &s, size_t *offset, Refs *refs,
   (*refs)[start_offset] = ret;
   return ret;
 }
-
-// std::string values(const std::string &s, size_t *offset, size_t
-// number_of_values) {
-// }
-
-// std::string qualified_name(const std::string &s, size_t *offset) {
-// }
 
 std::string funcattrs(const std::string &s, size_t *offset) {
   std::string ret;
@@ -647,9 +642,7 @@ std::string param_close(const std::string &s, size_t *offset) {
   return "";
 }
 
-// Forward declarations
-// std::string qualified_name(const std::string &s, size_t *offset, Refs *refs,
-// bool return_types = true, bool function_attributes = true);
+// Forward declarations.
 std::string mangled_name0(const std::string &s, size_t *offset, Refs *refs,
                           bool return_types = true,
                           bool function_attributes = true);
@@ -666,7 +659,7 @@ std::string type_function_no_return(const std::string &s, size_t *offset,
 
 // We provide name, in case of parsing functions.
 // This is because functions are of the form:  func_attrs return_type name
-// params But in mangled stream it is name fun_attrs params return_type
+// params. But in mangled stream it is name fun_attrs params return_type
 std::string type(const std::string &s, size_t *offset, Refs *refs,
                  const std::string &name = "", bool return_types = true,
                  bool function_attributes = true) {
@@ -676,8 +669,8 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
 
   const size_t start_offset = *offset;
   if (startswith(s, 'Q', offset)) {
-    return back_reference(
-        s, offset, refs);  // TODO: Verify that it is a type back reference.
+    // TODO: Verify that it is a type back reference.
+    return back_reference(s, offset, refs);
   }
   std::string ret = type_modifiers(s, offset);
   bool basic = false;
@@ -811,9 +804,8 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
   } else if (startswith(s, 'B', offset)) {
     // TypeTuple
     ret += "tuple!";
-    ret += parameters(
-        s, offset,
-        refs);  // Technically only closing with Z is allowed. (Not X, Y).
+    // TODO: Technically only closing with Z is allowed. (Not X, Y).
+    ret += parameters(s, offset, refs);
     basic = true;
   } else {
     std::string function_signature;
@@ -831,8 +823,8 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
       // ret += LName(s, offset, refs);
       ret += qualified_name(s, offset, refs, return_types, function_attributes);
 
-      (*refs)[start_offset] =
-          ret;  // Store type reference for back reference lookups.
+      // Store type reference for back reference lookups.
+      (*refs)[start_offset] = ret;
       return ret;
       // throw;
     }
@@ -856,8 +848,8 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
   }
 
   if (!basic) {
-    (*refs)[start_offset] =
-        ret;  // Store type reference for back reference lookups.
+    // Store type reference for back reference lookups.
+    (*refs)[start_offset] = ret;
   }
   return ret;
 }
@@ -1016,9 +1008,9 @@ std::string symbol_name(const std::string &s, size_t *offset, Refs *refs,
       } else if (startswith(s, 'S', offset)) {
         if (startswith(s, "_D", offset)) {
           // Not documented.
-          const std::string rr =
-              qualified_name(s, offset, refs, return_types,
-                             function_attributes);  // Does it uses own refs?
+          // Does it uses own refs?
+          const std::string rr = qualified_name(s, offset, refs, return_types,
+                                                function_attributes);
           template_args += rr;
         } else {
           // QualifiedName
@@ -1032,8 +1024,8 @@ std::string symbol_name(const std::string &s, size_t *offset, Refs *refs,
         // current platform, e.g. generated by functions with C++ linkage or
         // annotated with pragma(mangle,...).
         const size_t n = number(s, offset);
-        template_args += s.substr(
-            *offset, n);  // Very similar to Lname, just without __S support.
+        // Very similar to Lname, just without __S support.
+        template_args += s.substr(*offset, n);
         // TODO(baryluk): Should it also be stored in refs, For handling with Q?
         *offset += n;
         // } else if ('0' <= s[*offset] && s[*offset] <= '9') {
@@ -1125,7 +1117,8 @@ std::string qualified_name(const std::string &s, size_t *offset, Refs *refs,
 #endif
       // Assume not a function
       if (tms.size()) {
-        throw;  // type modifiers present, but not a function!
+        // type modifiers present, but not a function!
+        throw;
       }
       if (ret.size()) {
         ret += '.';
@@ -1164,7 +1157,7 @@ std::string mangled_name0(const std::string &s, size_t *offset, Refs *refs,
 std::string mangled_name(const std::string &s, size_t *offset,
                          bool return_types, bool function_attributes) {
   if (!startswith(s, "_D", offset)) {
-    return "";  // or s;
+    return "";  // or s?
   }
   // assert(offset == 2);
 

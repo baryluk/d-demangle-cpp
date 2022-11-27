@@ -61,3 +61,10 @@ _D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap6removeMFNbNi
 # timeout: sending signal TERM to command ‘./d-demangle’
 # $ c++filt -s dlang _D6object9Throwable8toStringMxFMDFxAaZvZv
 # object.Throwable.toString(scope void(const(char[])) delegate) const
+
+_D4core5cpuid18getcacheinfoCPUID2FNbNiNeZ14decipherCpuid2MFNbNihZ3idsyG63h immutable ubyte[63] ids decipherCpuid2(ubyte) nothrow @nogc core.cpuidgetcacheinfoCPUID2() nothrow @nogc trusted
+
+# Input:_D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread
+# core.thread.Thread core.thread.ThreadGroupcreate(delegate , void ())
+# $ c++filt -s dlang _D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread
+#                    core.thread.ThreadGroup.create(void() delegate)

@@ -26,6 +26,10 @@ Simple test script is provided to test few symbols.
 
 A full fuzzing testing would also be good to have.
 
+Missing features:
+* Underspecified features of demangling spec
+* wstring and dstring literals
+* assosciative array literals
 
 Building
 ========

@@ -24,21 +24,25 @@ _D3std4conv__T4textTAyaTQeTQhZQqFNaNbNfQtQvQxZQBa immutable char[] std.conv.text
 _D3std6format15FormatException6__ctorMFNaNbNiNfAyaQdmC6object9ThrowableZCQCtQCsQCo std.format.FormatException std.format.FormatException__ctor(immutable char[], immutable char[], ulong, object.Throwable) pure nothrow @nogc @safe
 _D3std9algorithm8mutation__T11moveEmplaceTASQBq8datetime8timezone13PosixTimeZone14TempTransitionZQCrFNaNbNiKQCoKQCsZv void std.algorithm.mutation.moveEmplace!(std.datetime.timezone.PosixTimeZone.TempTransition[])moveEmplace(ref std.datetime.timezone.PosixTimeZone.TempTransition[], ref std.datetime.timezone.PosixTimeZone.TempTransition[]) pure nothrow @nogc
 
-# This currently causes infinite loop: (c++filt also struggles with this)
+# This currently causes infinite loop:
 #_D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm
-#_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi
+# c++filt: core.internal.array.capacity._d_arraysetlengthTImpl!(ulong*[], ulong*)._d_arraysetlengthT(scope return ref ulong*[], ulong)
 
-# Inner function in a method.
+# This currently causes infinite loop:
+#_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi
+# c++filt: gc.impl.conservative.gc.ConservativeGC.rootIter()  # This looks like an issue in return type.
+
+# Inner function in a method. Pretty bad demangle.
 _D7example1X5cloneMxFCQuQoQfZ1xMFNaNbNiNfZi int x() pure nothrow @nogc @safe example.Xconst clone(example.X.)
-# Should be: pure nothrow @nogc @safe int example.X.clone(example.X, example.X).x()
+# Should be:                                    pure nothrow @nogc @safe int example.X.clone(example.X, example.X).x()
 
 # Class method (requires this)
 _D7example1X5cloneMxFCQuQoQfZQi example.X. example.Xconst clone(example.X.)
-# Should be: const example.X example.X.clone(example.X, example.X):
+# Should be:               const example.X example.X.clone(example.X, example.X):
 
 # Static class method:
 _D7example1X5cloneFCQsQmQfZQi example.X. example.Xclone(example.X.)
-# Should be: example.X example.X.clone(example.X, example.X)
+# Should be:                   example.X example.X.clone(example.X, example.X)
 
 # This is wrong
 _D2gc4impl12conservative2gc14ConservativeGC200__T9runLockedS78_D2gc4impl12conservative2gc14ConservativeGC12extendNoSyncMFNbPvmmxC8TypeInfoZmS40_D2gc4impl12conservative2gc10extendTimelS40_D2gc4impl12conservative2gc10numExtendslTPvTmTmTxC8TypeInfoZ9runLockedMFNbKPvKmKmKxC8TypeInfoZm ulong gc.impl.conservative.gc.ConservativeGC.__T9runLockedS78_D2gc4impl12conservative2gc14ConservativeGC12extendNoSyncMFNbPvmmxC8TypeInfoZmS40_D2gc4impl12conservative2gc10extendTimelS40_D2gc4impl12conservative2gc10numExtendslTPvTmTmTxC8TypeInfoZrunLocked(ref void*, ref ulong, ref ulong, ref const TypeInfo) nothrow
@@ -64,7 +68,5 @@ _D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap6removeMFNbNi
 
 _D4core5cpuid18getcacheinfoCPUID2FNbNiNeZ14decipherCpuid2MFNbNihZ3idsyG63h immutable ubyte[63] ids decipherCpuid2(ubyte) nothrow @nogc core.cpuidgetcacheinfoCPUID2() nothrow @nogc trusted
 
-# Input:_D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread
-# core.thread.Thread core.thread.ThreadGroupcreate(delegate , void ())
-# $ c++filt -s dlang _D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread
-#                    core.thread.ThreadGroup.create(void() delegate)
+_D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread core.thread.Thread core.thread.ThreadGroupcreate(delegate , void ())
+# $ c++filt:                                                                     core.thread.ThreadGroup.create(void() delegate)

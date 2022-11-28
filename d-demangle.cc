@@ -806,7 +806,6 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
     ret += "tuple!";
     // TODO: Technically only closing with Z is allowed. (Not X, Y).
     ret += parameters(s, offset, refs);
-    basic = true;
   } else {
     std::string function_signature;
     // TypeFunction

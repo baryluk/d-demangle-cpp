@@ -81,8 +81,8 @@ The intent is code execution correctness and compatibility, not speed.
 Routinly tested on gcc and clang on Linux.
 
 Library facilities required: `size_t`, `std::string`,
-`std::to_string(size_t)`, `std::runtime_error`, standard allocator for
-the above.
+`std::to_string(size_t)` (For C++11. For C++98 it will use `sprintf` from
+`cstdio`), `std::runtime_error`, standard allocator.
 
 It would be nice to not require exceptions to be enabled. Patches
 welcome.

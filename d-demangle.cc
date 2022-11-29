@@ -4,6 +4,7 @@
 #if __cplusplus >= 201103L
 #include <unordered_map>
 #else
+#include <cstdio>
 #include <map>
 #endif
 
@@ -196,6 +197,18 @@ size_t base26(const std::string &s, size_t *offset) {
 }
 
 #if __cplusplus >= 201103L
+std::string int2string(size_t value) {
+  return std::to_string(value);
+}
+#else
+std::string int2string(size_t value) {
+  char buffer[20]; // Max num of digits for 64 bit number
+  ::sprintf(buffer, "%ld", value);
+  return std::string(buffer);
+}
+#endif
+
+#if __cplusplus >= 201103L
 using Refs = typename std::unordered_map<size_t, std::string>;
 #else
 #define Refs std::map<size_t, std::string>
@@ -355,7 +368,7 @@ std::string hexfloat(const std::string &s, size_t *offset) {
       // optional, but lets be explicit.
       ret += '+';
     }
-    ret += std::to_string(e);
+    ret += int2string(e);
   }
   if (mantissa.size() == 8) {
     ret += 'f';
@@ -393,7 +406,7 @@ std::string value0(const std::string &s, size_t *offset, Refs *refs,
   }
   if (startswith(s, 'i', offset)) {
     // positive numeric literals (including character literals)
-    std::string i = std::to_string(number0(s, offset, 11));
+    std::string i = int2string(number0(s, offset, 11));
     if (type_hint.size()) {
       if (type_hint[0] == 'u') {
         i += 'u';
@@ -407,7 +420,7 @@ std::string value0(const std::string &s, size_t *offset, Refs *refs,
   if (startswith(s, 'N', offset)) {
     // negative numeric literals
     const size_t n = number0(s, offset, 11);
-    std::string i = std::to_string(n);
+    std::string i = int2string(n);
     if (type_hint.size()) {
       if (type_hint[0] == 'u') {
         i += 'u';
@@ -600,6 +613,8 @@ std::string funcattrs(const std::string &s, size_t *offset) {
   DEMANGLE_D_DEBUG(funcattrs);
   std::string ret;
   while (true) {
+    // TODO(baryluk): What about sequence of NaNg for example.
+    // Na is a func attr, but Ng is a first parameter attribute.
     if (startswith(s, "N", offset)) {
       if (!canread1(s, offset)) {
         DEMANGLE_D_DEBUG(NOT_funcattrs);
@@ -621,7 +636,7 @@ std::string funcattrs(const std::string &s, size_t *offset) {
       } else if (startswith(s, 'l', offset)) {  // Nl
         ret += " scope";
       } else if (startswith(s, 'e', offset)) {  // Ne
-        ret += " trusted";
+        ret += " @trusted";
       } else if (startswith(s, 'f', offset)) {  // Nf
         ret += " @safe";
       } else if (startswith(s, 'm', offset)) {  // Nm
@@ -640,13 +655,14 @@ std::string funcattrs(const std::string &s, size_t *offset) {
 std::string type_modifiers(const std::string &s, size_t *offset) {
   DEMANGLE_D_DEBUG(type_modifiers);
   std::string ret;
+  // TODO(baryluk): Should be const(T), ...
   if (startswith(s, "O", offset)) {
     ret += "shared ";
   } else if (startswith(s, "y", offset)) {
     return "immutable ";
   }
   if (startswith(s, "Ng", offset)) {
-    ret += "wild ";  // ???
+    ret += "inout ";  // ? "wild"
   }
   if (startswith(s, "x", offset)) {
     ret += "const ";
@@ -675,6 +691,10 @@ std::string call_convention(const std::string &s, size_t *offset) {
   }
   if (startswith(s, 'Y', offset)) {
     return "extern(ObjectiveC)";
+  }
+  // No longer in use or specified in ABI.
+  if (startswith(s, 'V', offset)) {
+    return "extern(Pascal)";
   }
   DEMANGLE_D_DEBUG(UNKNOWN_call_convention);
   throw std::runtime_error(std::string("Unknown call convention ") +
@@ -750,7 +770,7 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
         type(s, offset, refs, "", return_types, function_attributes);
     ret += element_type;
     ret += '[';
-    ret += std::to_string(n);
+    ret += int2string(n);
     ret += ']';
   } else if (startswith(s, 'H', offset)) {
     // TypeAssocArray
@@ -780,9 +800,9 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
   } else if (startswith(s, 'D', offset)) {
     // TypeDelegate
     std::string o = type_modifiers(s, offset);  // optional
-    ret += o;
-    ret += "delegate ";
     ret += qualified_name(s, offset, refs, return_types, function_attributes);
+    ret += " delegate";
+    ret += o;
   } else if (startswith(s, 'v', offset)) {
     ret += "void";
     basic = true;
@@ -857,11 +877,12 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
     basic = true;
   } else if (startswith(s, "Nn", offset)) {
     // TypeNoreturn
-    ret += "noreturn";  // void, bottom type?
+    // ret += "noreturn";  // void, bottom type?
+    ret += "typeof(*null)";
     basic = true;
   } else if (startswith(s, 'n', offset)) {
     // TypeNull
-    ret += "void()";  // void, bottom type?
+    ret += "typeof(null)";  // void, bottom type?
     basic = true;
   } else if (startswith(s, 'B', offset)) {
     // TypeTuple

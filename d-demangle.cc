@@ -4,13 +4,45 @@
 // C++11
 // #include <unordered_map>
 
-// #define DEMANGLE_D_DEBUG 1
+// #define DEMANGLE_D_DEBUG
 
-#if DEMANGLE_D_DEBUG
+#if defined(DEMANGLE_D_DEBUG)
+#undef DEMANGLE_D_DEBUG
 #include <iostream>
-#endif
+namespace demangle_d {
+struct DemangleScopeDebugger {
+  static int indent_level;
+
+  const std::string msg_;
+  const size_t *offset_ptr_;
+  const size_t start_offset_;
+  const std::string s_;
+  DemangleScopeDebugger(const std::string &msg, const std::string &s, const size_t *offset) : msg_(msg), offset_ptr_(offset), start_offset_(*offset), s_(s) {
+    for (int i = 0; i < indent_level; i++) {
+      std::cout << "  ";
+    }
+    std::cout << "> " << msg << "  - s[" << start_offset_ << "] = '" << s[start_offset_] << "'" << std::endl;
+    indent_level++;
+  }
+  ~DemangleScopeDebugger() {
+    indent_level--;
+    for (int i = 0; i < indent_level; i++) {
+      std::cout << "  ";
+    }
+    std::cout << "< " << msg_ << "  - s[" << start_offset_ << ".." << (*offset_ptr_) << "] = \"" << s_.substr(start_offset_, *offset_ptr_ - start_offset_) << "\"" << std::endl;
+  }
+};
+int DemangleScopeDebugger::indent_level = 0;
+}  // namespace demangle_d
+#define CONCAT(a, b) CONCAT_INNER(a, b)
+#define CONCAT_INNER(a, b) a ## b
+#define DEMANGLE_D_DEBUG(x) DemangleScopeDebugger CONCAT(demangle_debugger, __COUNTER__)(#x, s, offset)
+#else
+#define DEMANGLE_D_DEBUG(x) do {} while (0)
+#endif  // DEMANGLE_D_DEBUG
 
 #include "d-demangle.h"
+
 
 // https://dlang.org/spec/abi.html#name_mangling
 // Some stress tests:
@@ -92,6 +124,7 @@ inline bool canread1(const std::string &s, const size_t *offset) {
 
 // Number for LName
 size_t number(const std::string &s, size_t *offset, size_t limit = 8) {
+  DEMANGLE_D_DEBUG(number);
   const size_t off = *offset;
   size_t ret = 0;
   size_t i = 0;
@@ -116,6 +149,7 @@ size_t number(const std::string &s, size_t *offset, size_t limit = 8) {
 
 // Generic number for sample for string literals. Integer literals.
 size_t number0(const std::string &s, size_t *offset, size_t limit = 10) {
+  DEMANGLE_D_DEBUG(number0);
   const size_t off = *offset;
   size_t ret = 0;
   size_t i = 0;
@@ -136,6 +170,7 @@ size_t number0(const std::string &s, size_t *offset, size_t limit = 10) {
 }
 
 size_t base26(const std::string &s, size_t *offset) {
+  DEMANGLE_D_DEBUG(base26);
   const size_t off = *offset;
   size_t o = 0;
   size_t i = 0;
@@ -162,6 +197,7 @@ size_t base26(const std::string &s, size_t *offset) {
 
 // "Q" must be already consumed.
 std::string back_reference(const std::string &s, size_t *offset, Refs *refs) {
+  DEMANGLE_D_DEBUG(back_reference);
   // IdentifierBackRef or TypeBackRef
   // base26 offset.
   const size_t current_offset = *offset;
@@ -207,6 +243,7 @@ std::string back_reference(const std::string &s, size_t *offset, Refs *refs) {
 }
 
 std::string LName(const std::string &s, size_t *offset, Refs *refs) {
+  DEMANGLE_D_DEBUG(Lname);
   const size_t start_offset = *offset;
   // TODO(baryluk): There should be no leading zeros. 0 identifies an anonymous
   // symbol.
@@ -239,8 +276,10 @@ std::string LName(const std::string &s, size_t *offset, Refs *refs) {
 
 std::string LNameOrBackref(const std::string &s, size_t *offset, Refs *refs) {
   if (!canread1(s, offset)) {
+    DEMANGLE_D_DEBUG(NOT_LnameOrBackref);
     throw std::runtime_error("Cannot read LName or backref, truncated string?");
   }
+  DEMANGLE_D_DEBUG(LnameOrBackref);
   if (startswith(s, 'Q', offset)) {
     return back_reference(s, offset, refs);
   } else {
@@ -249,6 +288,7 @@ std::string LNameOrBackref(const std::string &s, size_t *offset, Refs *refs) {
 }
 
 unsigned char hexdigit(unsigned char c) {
+  // DEMANGLE_D_DEBUG(hexdigit);
   if ('0' <= c && c <= '9') {
     return c - '0';
   }
@@ -266,6 +306,7 @@ unsigned char hexdigit(unsigned char c) {
 }
 
 std::string hexfloat(const std::string &s, size_t *offset) {
+  DEMANGLE_D_DEBUG(hexfloat);
   if (startswith(s, "NAN", offset)) {
     return "nan";
   }
@@ -333,8 +374,10 @@ std::string qualified_name(const std::string &s, size_t *offset, Refs *refs,
 std::string value0(const std::string &s, size_t *offset, Refs *refs,
                    const std::string &type_hint = "") {
   if (!canread1(s, offset)) {
+    DEMANGLE_D_DEBUG(NOT_value0);
     throw std::runtime_error("Error decoding value0 - to short string");
   }
+  DEMANGLE_D_DEBUG(value0);
   // TODO(baryluk): Check if switch is faster.
   if (startswith(s, 'n', offset)) {
     if (type_hint.size()) {
@@ -540,6 +583,7 @@ std::string value0(const std::string &s, size_t *offset, Refs *refs,
 
 std::string value(const std::string &s, size_t *offset, Refs *refs,
                   const std::string &type_hint) {
+  DEMANGLE_D_DEBUG(value);
   const size_t start_offset = *offset;
   const std::string ret = value0(s, offset, refs, type_hint);
   (*refs)[start_offset] = ret;
@@ -547,10 +591,12 @@ std::string value(const std::string &s, size_t *offset, Refs *refs,
 }
 
 std::string funcattrs(const std::string &s, size_t *offset) {
+  DEMANGLE_D_DEBUG(funcattrs);
   std::string ret;
   while (true) {
     if (startswith(s, "N", offset)) {
       if (!canread1(s, offset)) {
+        DEMANGLE_D_DEBUG(NOT_funcattrs);
         throw std::runtime_error("Invalid truncated N sequence for funcattrs");
       }
       // TODO(baryluk): Check if switch is faster.
@@ -575,6 +621,7 @@ std::string funcattrs(const std::string &s, size_t *offset) {
       } else if (startswith(s, 'm', offset)) {  // Nm
         ret += " @live";
       } else {
+        DEMANGLE_D_DEBUG(UNKNOWN_funcattrs);
         throw std::runtime_error("Unknown function attribute");
       }
     } else {
@@ -585,6 +632,7 @@ std::string funcattrs(const std::string &s, size_t *offset) {
 }
 
 std::string type_modifiers(const std::string &s, size_t *offset) {
+  DEMANGLE_D_DEBUG(type_modifiers);
   std::string ret;
   if (startswith(s, "O", offset)) {
     ret += "shared ";
@@ -602,8 +650,10 @@ std::string type_modifiers(const std::string &s, size_t *offset) {
 
 std::string call_convention(const std::string &s, size_t *offset) {
   if (!canread1(s, offset)) {
+    DEMANGLE_D_DEBUG(NOT_call_convention);
     throw std::runtime_error("Missing call convention");
   }
+  DEMANGLE_D_DEBUG(call_convention);
   // TODO(baryluk): Check if switch is faster.
   if (startswith(s, 'F', offset)) {
     return "";  // D
@@ -620,6 +670,7 @@ std::string call_convention(const std::string &s, size_t *offset) {
   if (startswith(s, 'Y', offset)) {
     return "extern(ObjectiveC)";
   }
+  DEMANGLE_D_DEBUG(UNKNOWN_call_convention);
   throw std::runtime_error(std::string("Unknown call convention ") +
                            s[*offset]);
   return "";
@@ -627,8 +678,10 @@ std::string call_convention(const std::string &s, size_t *offset) {
 
 std::string param_close(const std::string &s, size_t *offset) {
   if (!canread1(s, offset)) {
+    DEMANGLE_D_DEBUG(NOT_param_close);
     throw std::runtime_error("Missing function param close");
   }
+  DEMANGLE_D_DEBUG(param_close);
   if (startswith(s, 'Z', offset)) {
     return ")";
   }
@@ -638,6 +691,7 @@ std::string param_close(const std::string &s, size_t *offset) {
   if (startswith(s, 'Y', offset)) {
     return ", ...)";
   }
+  DEMANGLE_D_DEBUG(UNKNOWN_param_close);
   throw std::runtime_error("Unknown function param close style");
   return "";
 }
@@ -664,9 +718,11 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
                  const std::string &name = "", bool return_types = true,
                  bool function_attributes = true) {
   if (!canread1(s, offset)) {
+    DEMANGLE_D_DEBUG(NOT_type);
     throw std::runtime_error("Cannot demangle type - missing TypeX");
   }
 
+  DEMANGLE_D_DEBUG(type);
   const size_t start_offset = *offset;
   if (startswith(s, 'Q', offset)) {
     // TODO: Verify that it is a type back reference.
@@ -807,6 +863,7 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
     // TODO: Technically only closing with Z is allowed. (Not X, Y).
     ret += parameters(s, offset, refs);
   } else {
+    DEMANGLE_D_DEBUG(type_fallbackt_to_type_function);
     std::string function_signature;
     // TypeFunction
     try {
@@ -857,6 +914,7 @@ std::string type_function_no_return(const std::string &s, size_t *offset,
                                     Refs *refs, const std::string &name,
                                     bool return_types,
                                     bool function_attributes) {
+  DEMANGLE_D_DEBUG(type_function_no_return);
   const std::string cc = call_convention(s, offset);
   std::string ret = cc;
   // function
@@ -867,23 +925,7 @@ std::string type_function_no_return(const std::string &s, size_t *offset,
     // }
     ret += name;
   }
-  ret += '(';
-  int i = 0;
-  while (true) {
-    try {
-      const std::string close = param_close(s, offset);  // X, Y, Z
-      ret += close;
-      break;
-    } catch (const std::runtime_error &ex) {
-      // assume there are more params
-    }
-    if (i++) {
-      ret += ", ";
-    }
-    const std::string param =
-        parameter2(s, offset, refs, return_types, function_attributes);
-    ret += param;
-  }
+  ret += parameters(s, offset, refs, return_types, function_attributes);
   if (function_attributes) {
     if (fa.size()) {
       // ret += " ";  // fa is already prefixed with space
@@ -895,6 +937,7 @@ std::string type_function_no_return(const std::string &s, size_t *offset,
 
 std::string parameter2(const std::string &s, size_t *offset, Refs *refs,
                        bool return_types, bool function_attributes) {
+  DEMANGLE_D_DEBUG(parameter2);
   std::string prefix;
   if (canread1(s, offset)) {
     if (startswith(s, 'I', offset)) {
@@ -916,6 +959,7 @@ std::string parameter2(const std::string &s, size_t *offset, Refs *refs,
 
 std::string parameters(const std::string &s, size_t *offset, Refs *refs,
                        bool return_types, bool function_attributes) {
+  DEMANGLE_D_DEBUG(parameters);
   std::string ret = "(";
   while (true) {
     try {
@@ -940,6 +984,8 @@ std::string parameters(const std::string &s, size_t *offset, Refs *refs,
     }
     // TODO(baryluk): What about "scope return" ? This looks to be not
     // supported.
+    // I think it is, via type_function_no_return() - it is a function
+    // modifier, not parameter attribute.
     if (ret.size() >= 2) {
       ret += ", ";
     }
@@ -959,9 +1005,12 @@ std::string symbol_name(const std::string &s, size_t *offset, Refs *refs,
                         bool return_types, bool function_attributes) {
   // Parse SymbolName
   if (!canread1(s, offset)) {
+    DEMANGLE_D_DEBUG(NOT_symbol_name);
     throw std::runtime_error("Cannot parse symbol_name, truncated string");
   }
+  DEMANGLE_D_DEBUG(symbol_name);
   if (startswith(s, "__T", offset) || startswith(s, "__U", offset)) {
+    DEMANGLE_D_DEBUG(symbol_name_template);
 #if DEMANGLE_D_DEBUG
     std::cout << "Parsing template" << std::endl;
 #endif
@@ -976,6 +1025,7 @@ std::string symbol_name(const std::string &s, size_t *offset, Refs *refs,
     // This is a bug in mangling spec. Empty template arguments are allowed,
     // and do mangle to one with Z immediately following template name.
     while (canread1(s, offset) && !startswith(s, 'Z', offset)) {
+      DEMANGLE_D_DEBUG(symbol_name_template_arg);
 #if DEMANGLE_D_DEBUG
       std::cout << "Parsing template arg" << std::endl;
 #endif
@@ -1031,6 +1081,7 @@ std::string symbol_name(const std::string &s, size_t *offset, Refs *refs,
         //   // alias? This is not documented.
         //   template_args += LName(s, offset, refs);
       } else {
+        DEMANGLE_D_DEBUG(symbol_name_template_arg_unknown);
         throw std::runtime_error("Unsupported template argument kind");
       }
     }
@@ -1054,20 +1105,24 @@ std::string symbol_name(const std::string &s, size_t *offset, Refs *refs,
 
 std::string qualified_name(const std::string &s, size_t *offset, Refs *refs,
                            bool return_types, bool function_attributes) {
+  DEMANGLE_D_DEBUG(qualified_name);
   std::string ret;
   while (true) {
+    DEMANGLE_D_DEBUG(qualified_name_symbol_try);
     std::string sym;
     try {
       size_t offset2 = *offset;
       sym = symbol_name(s, &offset2, refs, return_types, function_attributes);
       *offset = offset2;  // success
     } catch (const std::runtime_error &ex) {
+      DEMANGLE_D_DEBUG(qualified_name_symbol_no);
 #if DEMANGLE_D_DEBUG
       std::cout << "  " << ex.what() << std::endl;
 #endif
       // throw;
       return ret;
     }
+    DEMANGLE_D_DEBUG(qualified_name_symbol_yes);
 
     bool needs_this = false;
     std::string tms;
@@ -1130,6 +1185,7 @@ std::string qualified_name(const std::string &s, size_t *offset, Refs *refs,
 
 std::string mangled_name0(const std::string &s, size_t *offset, Refs *refs,
                           bool return_types, bool function_attributes) {
+  DEMANGLE_D_DEBUG(mangled_name0);
   const std::string q =
       qualified_name(s, offset, refs, return_types, function_attributes);
   if (startswith(s, "Z", offset)) {
@@ -1138,8 +1194,10 @@ std::string mangled_name0(const std::string &s, size_t *offset, Refs *refs,
 #endif
     return q;  // Internal
   }
+  DEMANGLE_D_DEBUG(mangled_name0_qualified_name_done);
   if (canread1(s, offset)) {
     std::string t = type(s, offset, refs, q, return_types, function_attributes);
+    DEMANGLE_D_DEBUG(mangled_name0_qualified_type_done);
     if (t.size()) {
       // For functions we need to do a bit of rearanging of return type.
       t += ' ';
@@ -1155,6 +1213,7 @@ std::string mangled_name0(const std::string &s, size_t *offset, Refs *refs,
 
 std::string mangled_name(const std::string &s, size_t *offset,
                          bool return_types, bool function_attributes) {
+  DEMANGLE_D_DEBUG(mangled_name);
   if (!startswith(s, "_D", offset)) {
     return "";  // or s?
   }

@@ -24,12 +24,14 @@ _D3std4conv__T4textTAyaTQeTQhZQqFNaNbNfQtQvQxZQBa immutable char[] std.conv.text
 _D3std6format15FormatException6__ctorMFNaNbNiNfAyaQdmC6object9ThrowableZCQCtQCsQCo std.format.FormatException std.format.FormatException__ctor(immutable char[], immutable char[], ulong, object.Throwable) pure nothrow @nogc @safe
 _D3std9algorithm8mutation__T11moveEmplaceTASQBq8datetime8timezone13PosixTimeZone14TempTransitionZQCrFNaNbNiKQCoKQCsZv void std.algorithm.mutation.moveEmplace!(std.datetime.timezone.PosixTimeZone.TempTransition[])moveEmplace(ref std.datetime.timezone.PosixTimeZone.TempTransition[], ref std.datetime.timezone.PosixTimeZone.TempTransition[]) pure nothrow @nogc
 
+_D3std3uni10safeRead24FNaNbNiMxPhmZk uint std.unisafeRead24(scope const ubyte*, ulong) pure nothrow @nogc
+
 # This currently causes infinite loop:
-#_D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm
+_D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm  core.internal.array.capacity._d_arraysetlengthTImpl!(ulong*[], ulong*)_d_arraysetlengthT( pure nothrow trustedNkKQBmmZm
 # c++filt: core.internal.array.capacity._d_arraysetlengthTImpl!(ulong*[], ulong*)._d_arraysetlengthT(scope return ref ulong*[], ulong)
 
 # This currently causes infinite loop:
-#_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi
+_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi int delegate  gc.impl.conservative.gc.ConservativeGCrootIter() @property @nogc (scope delegate , int (ref gc.gcinterface.Root) nothrow) delegate  gc.impl.conservative.gc.ConservativeGCrootIter() @property @nogc
 # c++filt: gc.impl.conservative.gc.ConservativeGC.rootIter()  # This looks like an issue in return type.
 
 # Inner function in a method. Pretty bad demangle.
@@ -58,13 +60,11 @@ _D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap6removeMFNbNi
 # Should be (+types): rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.remove(gc.gcinterface.Root)
 
 # Causes infinite loop
-# _D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap7opApplyMFNbMDFNbKS2gc11gcinterface4RootZiZi
+_D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap7opApplyMFNbMDFNbKS2gc11gcinterface4RootZiZi int rt.util.container.treap.__T5TreapTS2gc11gcinterface4RootZ.TreapopApply(scope delegate , int (ref gc.gcinterface.Root) nothrow) nothrow
 # Should be (+types): rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.opApply(scope int(ref gc.gcinterface.Root) nothrow delegate)
 
-# Input: _D6object9Throwable8toStringMxFMDFxAaZvZv
-# timeout: sending signal TERM to command ‘./d-demangle’
-# $ c++filt -s dlang _D6object9Throwable8toStringMxFMDFxAaZvZv
-# object.Throwable.toString(scope void(const(char[])) delegate) const
+_D6object9Throwable8toStringMxFMDFxAaZvZv void object.Throwableconst toString(scope delegate , void (const char[]))
+# Should be: object.Throwable.toString(scope void(const(char[])) delegate) const
 
 _D4core5cpuid18getcacheinfoCPUID2FNbNiNeZ14decipherCpuid2MFNbNihZ3idsyG63h immutable ubyte[63] ids decipherCpuid2(ubyte) nothrow @nogc core.cpuidgetcacheinfoCPUID2() nothrow @nogc trusted
 

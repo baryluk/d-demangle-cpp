@@ -70,3 +70,7 @@ _D4core5cpuid18getcacheinfoCPUID2FNbNiNeZ14decipherCpuid2MFNbNihZ3idsyG63h immut
 
 _D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread core.thread.Thread core.thread.ThreadGroupcreate(delegate , void ())
 # $ c++filt:                                                                     core.thread.ThreadGroup.create(void() delegate)
+
+# Could be better:
+_D6object39__T12_getPostblitTC4core6thread6ThreadZ12_getPostblitFNaNbNiNeZDFNaNbNiNfKC4core6thread6ThreadZv void delegate  object.__T12_getPostblitTC4core6thread6ThreadZ_getPostblit() pure nothrow @nogc trusted (ref core.thread.Thread) pure nothrow @nogc @safe delegate  object.__T12_getPostblitTC4core6thread6ThreadZ_getPostblit() pure nothrow @nogc trusted
+_D6object70__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZ6valuesFNaNbNdHAyaC3std3zip13ArchiveMemberZAC3std3zip13ArchiveMember std.zip.ArchiveMember[] object.__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZvalues(std.zip.ArchiveMember[immutable char[]]) pure nothrow @property

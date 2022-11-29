@@ -19,8 +19,7 @@ Status
 
 Alpha. It mostly works. However there are know cases where it produces
 suboptimal demangles, adds some spourious spaces, or misses some dots in
-few places. I also know of at least one case where the demangler loops
-infinitely and does not return. Hopefully it will be fixed.
+few places. It will likely be fixed soon.
 
 Simple test script is provided to test few symbols.
 
@@ -31,6 +30,8 @@ Missing features:
 * wstring and dstring literals
 * assosciative array literals
 * inner functions are not demangled properly fully (but it is okish)
+* 64-bit integers and float values are untested (should work, but
+  validation is not complete).
 
 Building
 ========
@@ -123,5 +124,5 @@ name will remain in the Git history, but not necassarily in a
 redistributed code.
 
 Coding style follow Google style guidelines in formatting with 80 columns
-width, and */& in types attached to the variable name. Function names are
-lower snake case tho.
+width, and `*`/`&` in types attached to the variable name. Function names
+are lower snake case tho.

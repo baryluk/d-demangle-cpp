@@ -1,8 +1,11 @@
-#include <map>
 #include <stdexcept>
 #include <string>
-// C++11
-// #include <unordered_map>
+
+#if __cplusplus >= 201103L
+#include <unordered_map>
+#else
+#include <map>
+#endif
 
 // #define DEMANGLE_D_DEBUG
 
@@ -192,8 +195,11 @@ size_t base26(const std::string &s, size_t *offset) {
   return -1;
 }
 
-// using Refs = typename std::unordered_map<size_t, std::string>;
+#if __cplusplus >= 201103L
+using Refs = typename std::unordered_map<size_t, std::string>;
+#else
 #define Refs std::map<size_t, std::string>
+#endif
 
 // "Q" must be already consumed.
 std::string back_reference(const std::string &s, size_t *offset, Refs *refs) {

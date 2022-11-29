@@ -1180,8 +1180,9 @@ std::string qualified_name(const std::string &s, size_t *offset, Refs *refs,
                 << tfnr << std::endl;
 #endif
       *offset = offset2;
-      // ret += '.';
-      ret += tms;
+      if (ret.size()) {
+        ret += ".";
+      }
       ret += tfnr;
       try {
         size_t offset3 = *offset;
@@ -1196,6 +1197,12 @@ std::string qualified_name(const std::string &s, size_t *offset, Refs *refs,
 #endif
       } catch (...) {
       }
+      if (tms.size()) {
+        ret += ' ';
+        // Remove last character (space). (pop_back is C++11).
+        tms.resize(tms.size() - 1); 
+        ret += tms;
+      }
       return ret;
     } catch (const std::runtime_error &ex) {
 #if DEMANGLE_D_DEBUG
@@ -1207,7 +1214,7 @@ std::string qualified_name(const std::string &s, size_t *offset, Refs *refs,
         throw;
       }
       if (ret.size()) {
-        ret += '.';
+        ret += ".";
       }
       ret += sym;
     }

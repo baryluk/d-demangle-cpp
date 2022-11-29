@@ -17,9 +17,7 @@ Goals
 Status
 ======
 
-Alpha. It mostly works. However there are know cases where it produces
-suboptimal demangles, adds some spourious spaces, or misses some dots in
-few places. It will likely be fixed soon.
+Alpha. It mostly works.
 
 Simple test script is provided to test few symbols.
 
@@ -27,6 +25,7 @@ A full fuzzing testing would also be good to have.
 
 Missing features:
 * Underspecified features of demangling spec
+* some complex delegate type parameter types are not formatted correctly
 * wstring and dstring literals
 * assosciative array literals
 * inner functions are not demangled properly fully (but it is okish)

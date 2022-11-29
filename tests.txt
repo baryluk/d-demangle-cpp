@@ -8,69 +8,68 @@
 # If you modify code and the demangling actually improves,
 # please do fix expectations here to follow.
 
-_D3std5stdio__T8writeflnTaTiZQoFNfxAaiZv void std.stdio.writefln!(char, int)writefln(const char[], int) @safe
-_D3rcu__T3RCUTSQn1AZQl15reader_accessorMFNbZSQBr__TQBqTQBpZQBy12RCU_Accessor rcu.RCU!(rcu.A).RCU.RCU_Accessor rcu.RCU!(rcu.A).RCUreader_accessor() nothrow
-_D3std8datetime9stopwatch9StopWatch6__ctorMFNbNcNiNfEQBz8typecons__T4FlagVAyaa9_6175746f5374617274ZQBfZSQDyQDxQDrQDk std.datetime.stopwatch.StopWatch std.datetime.stopwatch.StopWatch__ctor(std.typecons.Flag!("autoStart").Flag) nothrow ref @nogc @safe
-_D4core4time8Duration__T8opBinaryVAyaa1_2bTSQBqQBoQBmZQBeMxFNaNbNiNfQzZQBc core.time.Duration core.time.Duration.opBinary!("+", core.time.Duration)const opBinary(core.time.Duration) pure nothrow @nogc @safe
-_D4core4sync5mutex5Mutex__T12lock_nothrowTOCQBqQBoQBmQBjZQBeMOFNbNiNeZv void core.sync.mutex.Mutex.lock_nothrow!(shared core.sync.mutex.Mutex)shared lock_nothrow() nothrow @nogc trusted
-_D3std6random__T7uniformVAyaa2_5b29TiTiTSQBnQBm__T21MersenneTwisterEngineTkVmi32Vmi624Vmi397Vmi31Vki2567483615Vmi11Vki4294967295Vmi7Vki2636928640Vmi15Vki4022730752Vmi18Vki1812433253ZQFcZQGoFNaNfiiKQGbZi int std.random.uniform!("[)", int, int, std.random.MersenneTwisterEngine!(uint, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u).MersenneTwisterEngine)uniform(int, int, ref std.random.MersenneTwisterEngine!(uint, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u).MersenneTwisterEngine) pure @safe
-_D3std5array__TQjTSQr5range__T4TakeTSQBjQt__T9GeneratorS_D3rcu8gen_listFZ9__lambda1FNfZiZQBsZQClZQDnFNfQDhZAi int[] std.array.array!(std.range.Take!(std.range.Generator!(int __lambda1() @safe rcugen_list()).Generator).Take)array(std.range.Take!(std.range.Generator!(int __lambda1() @safe rcugen_list()).Generator).Take) @safe
+_D3std5stdio__T8writeflnTaTiZQoFNfxAaiZv void std.stdio.writefln!(char, int).writefln(const char[], int) @safe
+_D3rcu__T3RCUTSQn1AZQl15reader_accessorMFNbZSQBr__TQBqTQBpZQBy12RCU_Accessor rcu.RCU!(rcu.A).RCU.RCU_Accessor rcu.RCU!(rcu.A).RCU.reader_accessor() nothrow
+_D3std8datetime9stopwatch9StopWatch6__ctorMFNbNcNiNfEQBz8typecons__T4FlagVAyaa9_6175746f5374617274ZQBfZSQDyQDxQDrQDk std.datetime.stopwatch.StopWatch std.datetime.stopwatch.StopWatch.__ctor(std.typecons.Flag!("autoStart").Flag) nothrow ref @nogc @safe
+_D4core4time8Duration__T8opBinaryVAyaa1_2bTSQBqQBoQBmZQBeMxFNaNbNiNfQzZQBc core.time.Duration core.time.Duration.opBinary!("+", core.time.Duration).opBinary(core.time.Duration) pure nothrow @nogc @safe const
+_D4core4sync5mutex5Mutex__T12lock_nothrowTOCQBqQBoQBmQBjZQBeMOFNbNiNeZv void core.sync.mutex.Mutex.lock_nothrow!(shared core.sync.mutex.Mutex).lock_nothrow() nothrow @nogc trusted shared
+_D3std6random__T7uniformVAyaa2_5b29TiTiTSQBnQBm__T21MersenneTwisterEngineTkVmi32Vmi624Vmi397Vmi31Vki2567483615Vmi11Vki4294967295Vmi7Vki2636928640Vmi15Vki4022730752Vmi18Vki1812433253ZQFcZQGoFNaNfiiKQGbZi int std.random.uniform!("[)", int, int, std.random.MersenneTwisterEngine!(uint, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u).MersenneTwisterEngine).uniform(int, int, ref std.random.MersenneTwisterEngine!(uint, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u).MersenneTwisterEngine) pure @safe
+_D3std5array__TQjTSQr5range__T4TakeTSQBjQt__T9GeneratorS_D3rcu8gen_listFZ9__lambda1FNfZiZQBsZQClZQDnFNfQDhZAi int[] std.array.array!(std.range.Take!(std.range.Generator!(int __lambda1() @safe rcu.gen_list()).Generator).Take).array(std.range.Take!(std.range.Generator!(int __lambda1() @safe rcu.gen_list()).Generator).Take) @safe
 
-_D3std5range__T9GeneratorS_D3rcu8gen_listFZ9__lambda1FNfZiZQBs8popFrontMFNfZv void std.range.Generator!(int __lambda1() @safe rcugen_list()).GeneratorpopFront() @safe
+_D3std5range__T9GeneratorS_D3rcu8gen_listFZ9__lambda1FNfZiZQBs8popFrontMFNfZv void std.range.Generator!(int __lambda1() @safe rcu.gen_list()).Generator.popFront() @safe
 # Should be (we were having that in the future): void std.range.Generator!(int __lambda1() @safe rcugen_list()).popFront() @safe
 
 _D3rcu3rndS3std6random__T21MersenneTwisterEngineTkVmi32Vmi624Vmi397Vmi31Vki2567483615Vmi11Vki4294967295Vmi7Vki2636928640Vmi15Vki4022730752Vmi18Vki1812433253ZQFc std.random.MersenneTwisterEngine!(uint, 32ul, 624ul, 397ul, 31ul, 2567483615u, 11ul, 4294967295u, 7ul, 2636928640u, 15ul, 4022730752u, 18ul, 1812433253u).MersenneTwisterEngine rcu.rnd
-_D3std4conv__T4textTAyaTQeTQhZQqFNaNbNfQtQvQxZQBa immutable char[] std.conv.text!(immutable char[], immutable char[], immutable char[])text(immutable char[], immutable char[], immutable char[]) pure nothrow @safe
-_D3std6format15FormatException6__ctorMFNaNbNiNfAyaQdmC6object9ThrowableZCQCtQCsQCo std.format.FormatException std.format.FormatException__ctor(immutable char[], immutable char[], ulong, object.Throwable) pure nothrow @nogc @safe
-_D3std9algorithm8mutation__T11moveEmplaceTASQBq8datetime8timezone13PosixTimeZone14TempTransitionZQCrFNaNbNiKQCoKQCsZv void std.algorithm.mutation.moveEmplace!(std.datetime.timezone.PosixTimeZone.TempTransition[])moveEmplace(ref std.datetime.timezone.PosixTimeZone.TempTransition[], ref std.datetime.timezone.PosixTimeZone.TempTransition[]) pure nothrow @nogc
+_D3std4conv__T4textTAyaTQeTQhZQqFNaNbNfQtQvQxZQBa immutable char[] std.conv.text!(immutable char[], immutable char[], immutable char[]).text(immutable char[], immutable char[], immutable char[]) pure nothrow @safe
+_D3std6format15FormatException6__ctorMFNaNbNiNfAyaQdmC6object9ThrowableZCQCtQCsQCo std.format.FormatException std.format.FormatException.__ctor(immutable char[], immutable char[], ulong, object.Throwable) pure nothrow @nogc @safe
+_D3std9algorithm8mutation__T11moveEmplaceTASQBq8datetime8timezone13PosixTimeZone14TempTransitionZQCrFNaNbNiKQCoKQCsZv void std.algorithm.mutation.moveEmplace!(std.datetime.timezone.PosixTimeZone.TempTransition[]).moveEmplace(ref std.datetime.timezone.PosixTimeZone.TempTransition[], ref std.datetime.timezone.PosixTimeZone.TempTransition[]) pure nothrow @nogc
 
-_D3std3uni10safeRead24FNaNbNiMxPhmZk uint std.unisafeRead24(scope const ubyte*, ulong) pure nothrow @nogc
-
-# This currently causes infinite loop:
-_D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm ulong core.internal.array.capacity._d_arraysetlengthTImpl!(ulong*[], ulong*)_d_arraysetlengthT(scope return ref ulong*[], ulong) pure nothrow trusted
-# c++filt: core.internal.array.capacity._d_arraysetlengthTImpl!(ulong*[], ulong*)._d_arraysetlengthT(scope return ref ulong*[], ulong)
+_D3std3uni10safeRead24FNaNbNiMxPhmZk uint std.uni.safeRead24(scope const ubyte*, ulong) pure nothrow @nogc
 
 # This currently causes infinite loop:
-_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi int delegate  gc.impl.conservative.gc.ConservativeGCrootIter() @property @nogc (scope delegate , int (ref gc.gcinterface.Root) nothrow) delegate  gc.impl.conservative.gc.ConservativeGCrootIter() @property @nogc
+_D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm ulong core.internal.array.capacity._d_arraysetlengthTImpl!(ulong*[], ulong*)._d_arraysetlengthT(scope return ref ulong*[], ulong) pure nothrow trusted
+
+# This currently causes infinite loop:
+_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi int delegate  gc.impl.conservative.gc.ConservativeGC.rootIter() @property @nogc (scope delegate , int (ref gc.gcinterface.Root) nothrow) delegate  gc.impl.conservative.gc.ConservativeGC.rootIter() @property @nogc
 # c++filt: gc.impl.conservative.gc.ConservativeGC.rootIter()  # This looks like an issue in return type.
 
 # Inner function in a method. Pretty bad demangle.
-_D7example1X5cloneMxFCQuQoQfZ1xMFNaNbNiNfZi int x() pure nothrow @nogc @safe example.Xconst clone(example.X.)
+_D7example1X5cloneMxFCQuQoQfZ1xMFNaNbNiNfZi int x() pure nothrow @nogc @safe example.X.clone(example.X.) const
 # Should be:                                    pure nothrow @nogc @safe int example.X.clone(example.X, example.X).x()
 
 # Class method (requires this)
-_D7example1X5cloneMxFCQuQoQfZQi example.X. example.Xconst clone(example.X.)
+_D7example1X5cloneMxFCQuQoQfZQi example.X. example.X.clone(example.X.) const
 # Should be:               const example.X example.X.clone(example.X, example.X):
 
 # Static class method:
-_D7example1X5cloneFCQsQmQfZQi example.X. example.Xclone(example.X.)
+_D7example1X5cloneFCQsQmQfZQi example.X. example.X.clone(example.X.)
 # Should be:                   example.X example.X.clone(example.X, example.X)
 
 # This is wrong
-_D2gc4impl12conservative2gc14ConservativeGC200__T9runLockedS78_D2gc4impl12conservative2gc14ConservativeGC12extendNoSyncMFNbPvmmxC8TypeInfoZmS40_D2gc4impl12conservative2gc10extendTimelS40_D2gc4impl12conservative2gc10numExtendslTPvTmTmTxC8TypeInfoZ9runLockedMFNbKPvKmKmKxC8TypeInfoZm ulong gc.impl.conservative.gc.ConservativeGC.__T9runLockedS78_D2gc4impl12conservative2gc14ConservativeGC12extendNoSyncMFNbPvmmxC8TypeInfoZmS40_D2gc4impl12conservative2gc10extendTimelS40_D2gc4impl12conservative2gc10numExtendslTPvTmTmTxC8TypeInfoZrunLocked(ref void*, ref ulong, ref ulong, ref const TypeInfo) nothrow
+_D2gc4impl12conservative2gc14ConservativeGC200__T9runLockedS78_D2gc4impl12conservative2gc14ConservativeGC12extendNoSyncMFNbPvmmxC8TypeInfoZmS40_D2gc4impl12conservative2gc10extendTimelS40_D2gc4impl12conservative2gc10numExtendslTPvTmTmTxC8TypeInfoZ9runLockedMFNbKPvKmKmKxC8TypeInfoZm ulong gc.impl.conservative.gc.ConservativeGC.__T9runLockedS78_D2gc4impl12conservative2gc14ConservativeGC12extendNoSyncMFNbPvmmxC8TypeInfoZmS40_D2gc4impl12conservative2gc10extendTimelS40_D2gc4impl12conservative2gc10numExtendslTPvTmTmTxC8TypeInfoZ.runLocked(ref void*, ref ulong, ref ulong, ref const TypeInfo) nothrow
 # This is wrong
-_D2gc4impl12conservative2gc14ConservativeGC187__T9runLockedS85_D2gc4impl12conservative2gc14ConservativeGC11queryNoSyncMFNbPvZS4core6memory8BlkInfo_S38_D2gc4impl12conservative2gc9otherTimelS38_D2gc4impl12conservative2gc9numOtherslTPvZ9runLockedMFNbKPvZS4core6memory8BlkInfo_ core.memory.BlkInfo_ gc.impl.conservative.gc.ConservativeGC.__T9runLockedS85_D2gc4impl12conservative2gc14ConservativeGC11queryNoSyncMFNbPvZS4core6memory8BlkInfo_S38_D2gc4impl12conservative2gc9otherTimelS38_D2gc4impl12conservative2gc9numOtherslTPvZrunLocked(ref void*) nothrow
+_D2gc4impl12conservative2gc14ConservativeGC187__T9runLockedS85_D2gc4impl12conservative2gc14ConservativeGC11queryNoSyncMFNbPvZS4core6memory8BlkInfo_S38_D2gc4impl12conservative2gc9otherTimelS38_D2gc4impl12conservative2gc9numOtherslTPvZ9runLockedMFNbKPvZS4core6memory8BlkInfo_ core.memory.BlkInfo_ gc.impl.conservative.gc.ConservativeGC.__T9runLockedS85_D2gc4impl12conservative2gc14ConservativeGC11queryNoSyncMFNbPvZS4core6memory8BlkInfo_S38_D2gc4impl12conservative2gc9otherTimelS38_D2gc4impl12conservative2gc9numOtherslTPvZ.runLocked(ref void*) nothrow
 
-_D2gc4impl12conservative2gc14ConservativeGC13runFinalizersMFNbxAvZ2goFNbPS2gc4impl12conservative2gc3GcxxAvZv void go(gc.impl.conservative.gc.Gcx*, const void[]) nothrow gc.impl.conservative.gc.ConservativeGCrunFinalizers(const void[]) nothrow
-_D2gc4impl12conservative2gc14ConservativeGC7setAttrMFNbPvkZ2goFNbPS2gc4impl12conservative2gc3GcxPvkZk uint go(gc.impl.conservative.gc.Gcx*, void*, uint) nothrow gc.impl.conservative.gc.ConservativeGCsetAttr(void*, uint) nothrow
-_D2gc2os12os_mem_unmapFNbPvmZi int gc.osos_mem_unmap(void*, ulong) nothrow
+_D2gc4impl12conservative2gc14ConservativeGC13runFinalizersMFNbxAvZ2goFNbPS2gc4impl12conservative2gc3GcxxAvZv void go(gc.impl.conservative.gc.Gcx*, const void[]) nothrow gc.impl.conservative.gc.ConservativeGC.runFinalizers(const void[]) nothrow
+_D2gc4impl12conservative2gc14ConservativeGC7setAttrMFNbPvkZ2goFNbPS2gc4impl12conservative2gc3GcxPvkZk uint go(gc.impl.conservative.gc.Gcx*, void*, uint) nothrow gc.impl.conservative.gc.ConservativeGC.setAttr(void*, uint) nothrow
+_D2gc2os12os_mem_unmapFNbPvmZi int gc.os.os_mem_unmap(void*, ulong) nothrow
 
 # This could be better:
-_D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap6removeMFNbNiS2gc11gcinterface4RootZv void rt.util.container.treap.__T5TreapTS2gc11gcinterface4RootZ.Treapremove(gc.gcinterface.Root) nothrow @nogc
+_D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap6removeMFNbNiS2gc11gcinterface4RootZv void rt.util.container.treap.__T5TreapTS2gc11gcinterface4RootZ.Treap.remove(gc.gcinterface.Root) nothrow @nogc
 # Should be (+types): rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.remove(gc.gcinterface.Root)
 
 # Causes infinite loop
-_D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap7opApplyMFNbMDFNbKS2gc11gcinterface4RootZiZi int rt.util.container.treap.__T5TreapTS2gc11gcinterface4RootZ.TreapopApply(scope delegate , int (ref gc.gcinterface.Root) nothrow) nothrow
+_D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap7opApplyMFNbMDFNbKS2gc11gcinterface4RootZiZi int rt.util.container.treap.__T5TreapTS2gc11gcinterface4RootZ.Treap.opApply(scope delegate , int (ref gc.gcinterface.Root) nothrow) nothrow
 # Should be (+types): rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.opApply(scope int(ref gc.gcinterface.Root) nothrow delegate)
 
-_D6object9Throwable8toStringMxFMDFxAaZvZv void object.Throwableconst toString(scope delegate , void (const char[]))
+_D6object9Throwable8toStringMxFMDFxAaZvZv void object.Throwable.toString(scope delegate , void (const char[])) const
 # Should be: object.Throwable.toString(scope void(const(char[])) delegate) const
 
-_D4core5cpuid18getcacheinfoCPUID2FNbNiNeZ14decipherCpuid2MFNbNihZ3idsyG63h immutable ubyte[63] ids decipherCpuid2(ubyte) nothrow @nogc core.cpuidgetcacheinfoCPUID2() nothrow @nogc trusted
+_D4core5cpuid18getcacheinfoCPUID2FNbNiNeZ14decipherCpuid2MFNbNihZ3idsyG63h immutable ubyte[63] ids decipherCpuid2(ubyte) nothrow @nogc core.cpuid.getcacheinfoCPUID2() nothrow @nogc trusted
 
-_D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread core.thread.Thread core.thread.ThreadGroupcreate(delegate , void ())
+_D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread core.thread.Thread core.thread.ThreadGroup.create(delegate , void ())
 # $ c++filt:                                                                     core.thread.ThreadGroup.create(void() delegate)
 
 # Could be better:
-_D6object39__T12_getPostblitTC4core6thread6ThreadZ12_getPostblitFNaNbNiNeZDFNaNbNiNfKC4core6thread6ThreadZv void delegate  object.__T12_getPostblitTC4core6thread6ThreadZ_getPostblit() pure nothrow @nogc trusted (ref core.thread.Thread) pure nothrow @nogc @safe delegate  object.__T12_getPostblitTC4core6thread6ThreadZ_getPostblit() pure nothrow @nogc trusted
-_D6object70__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZ6valuesFNaNbNdHAyaC3std3zip13ArchiveMemberZAC3std3zip13ArchiveMember std.zip.ArchiveMember[] object.__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZvalues(std.zip.ArchiveMember[immutable char[]]) pure nothrow @property
+_D6object39__T12_getPostblitTC4core6thread6ThreadZ12_getPostblitFNaNbNiNeZDFNaNbNiNfKC4core6thread6ThreadZv void delegate  object.__T12_getPostblitTC4core6thread6ThreadZ._getPostblit() pure nothrow @nogc trusted (ref core.thread.Thread) pure nothrow @nogc @safe delegate  object.__T12_getPostblitTC4core6thread6ThreadZ._getPostblit() pure nothrow @nogc trusted
+_D6object70__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZ6valuesFNaNbNdHAyaC3std3zip13ArchiveMemberZAC3std3zip13ArchiveMember std.zip.ArchiveMember[] object.__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZ.values(std.zip.ArchiveMember[immutable char[]]) pure nothrow @property

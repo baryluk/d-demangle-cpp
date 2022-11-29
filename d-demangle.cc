@@ -978,9 +978,34 @@ std::string parameters(const std::string &s, size_t *offset, Refs *refs,
     }
     bool scope = false;
     bool _return = false;
+    // Specification says only M or Nk (or none) can happen:
+    //
+    // Parameters:
+    //     Parameter
+    //     Parameter Parameters
+    //
+    // Parameter:
+    //     Parameter2
+    //     M Parameter2     // scope
+    //     Nk Parameter2    // return
+    //
+    // Parameter2:
+    //     Type
+    //     I Type     // in
+    //     J Type     // out
+    //     K Type     // ref
+    //     L Type     // lazy
+    //
+    // (And there is no Type with prefix M - that would be ambigous anyway).
+    //
+    // But I did see this:
+    // _D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm
+    //                                                                                               ^^^
     if (startswith(s, "M", offset)) {
       scope = true;
-    } else if (startswith(s, "Nk", offset)) {
+    }
+    // Note: This should be } else if { according to spec. But spec is wrong.
+    if (startswith(s, "Nk", offset)) {
       _return = true;
     }
     const std::string p =
@@ -989,7 +1014,8 @@ std::string parameters(const std::string &s, size_t *offset, Refs *refs,
       break;
     }
     // TODO(baryluk): What about "scope return" ? This looks to be not
-    // supported.
+    // supported. (It is undocumented by spec, but actually supported
+    // and required to demangle real world symbols)
     // I think it is, via type_function_no_return() - it is a function
     // modifier, not parameter attribute.
     if (ret.size() >= 2) {

@@ -202,7 +202,7 @@ std::string int2string(size_t value) {
 }
 #else
 std::string int2string(size_t value) {
-  char buffer[20]; // Max num of digits for 64 bit number
+  char buffer[22];
   ::sprintf(buffer, "%ld", value);
   return std::string(buffer);
 }

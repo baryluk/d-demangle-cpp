@@ -73,3 +73,11 @@ _D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread core.thread.Thread
 # Could be better:
 _D6object39__T12_getPostblitTC4core6thread6ThreadZ12_getPostblitFNaNbNiNeZDFNaNbNiNfKC4core6thread6ThreadZv void delegate  object.__T12_getPostblitTC4core6thread6ThreadZ._getPostblit() pure nothrow @nogc trusted (ref core.thread.Thread) pure nothrow @nogc @safe delegate  object.__T12_getPostblitTC4core6thread6ThreadZ._getPostblit() pure nothrow @nogc trusted
 _D6object70__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZ6valuesFNaNbNdHAyaC3std3zip13ArchiveMemberZAC3std3zip13ArchiveMember std.zip.ArchiveMember[] object.__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZ.values(std.zip.ArchiveMember[immutable char[]]) pure nothrow @property
+
+# Input: _D4core8demangle37__T8DemangleTS4core8demangle7NoHooksZ8Demangle5shiftMFNaNiNfAxaZAa
+# Output   : char[] core.demangle.__T8DemangleTS4core8demangle7NoHooksZ.Demangle.shift(const char[]) pure @nogc @safe
+# Should be: char[] core.demangle.Demangle!(core.demangle.NoHooks).Demangle.shift(const(char)[]) pure @nogc @safe
+
+# Input: _D6object90__T16assumeSafeAppendTS3std5regex8internal9kickstart14__T7ShiftOrTaZ7ShiftOr11ShiftThreadZ16assumeSafeAppendFNbNcKNgAS3std5regex8internal9kickstart14__T7ShiftOrTaZ7ShiftOr11ShiftThreadZNgAS3std5regex8internal9kickstart14__T7ShiftOrTaZ7ShiftOr11ShiftThread
+# Output: wild std.regex.internal.kickstart.__T7ShiftOrTaZ.ShiftOr.ShiftThread[] object.__T16assumeSafeAppendTS3std5regex8internal9kickstart14__T7ShiftOrTaZ7ShiftOr11ShiftThreadZ.assumeSafeAppend(ref wild std.regex.internal.kickstart.__T7ShiftOrTaZ.ShiftOr.ShiftThread[]) nothrow ref
+# Should be:                                                                 ... object.assumeSafeAppend!(std.regex.internal.kickstart.ShiftOr!(char).ShiftOr.ShiftThread).assumeSafeAppend(ref inout(std.regex.internal.kickstart.ShiftOr!(char).ShiftOr.ShiftThread[])) ...

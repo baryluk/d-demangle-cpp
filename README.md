@@ -17,20 +17,24 @@ Goals
 Status
 ======
 
-Alpha. It mostly works.
+Alpha. It mostly works. For example it can demangle all symbols in Phobos
+without crashing, invalid accesses or going into infinite loops.
+
+While performance is not its goal (in fact there are is plenty of slow
+string copying patterns in it), it is not slow. Demangling phobos symbols
+at a rate of 22000 symbols per second on a weak CPU.
 
 Simple test script is provided to test few symbols.
 
-A full fuzzing testing would also be good to have.
-
-Missing features:
+Missing / untested features:
 * Underspecified features of demangling spec
-* some complex delegate type parameter types are not formatted correctly
 * wstring and dstring literals
 * assosciative array literals
 * inner functions are not demangled properly fully (but it is okish)
 * 64-bit integers and float values are untested (should work, but
   validation is not complete).
+
+A full fuzzing testing would also be good to have.
 
 Building
 ========

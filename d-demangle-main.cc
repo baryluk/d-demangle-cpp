@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 
   if (argc <= 1 || std::string(argv[1]) == "--help") {
     std::cerr << "Usage: " << argv[0]
-              << " [--help] [--verbose] [--no_return_type] "
+              << " [--help] [--verbose] [--no_return_types] "
                  "[--no_function_attributes] "
                  "_Dsymbol _Dsymbol ..."
               << std::endl;

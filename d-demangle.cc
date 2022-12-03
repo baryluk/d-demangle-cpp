@@ -642,8 +642,12 @@ std::string funcattrs(const std::string &s, size_t *offset) {
       } else if (startswith(s, 'm', offset)) {  // Nm
         ret += " @live";
       } else {
-        DEMANGLE_D_DEBUG(UNKNOWN_funcattrs);
-        throw std::runtime_error("Unknown function attribute");
+        // DEMANGLE_D_DEBUG(UNKNOWN_funcattrs);
+        // throw std::runtime_error(std::string("Unknown function attribute N") + s[*offset]);
+        // Could be Ng (inout type modifier of the first argument),
+        // or Nk possibly return scope on a function..
+        *offset -= 1;
+        break;
       }
     } else {
       break;
@@ -736,13 +740,50 @@ std::string type_function_no_return(const std::string &s, size_t *offset,
                                     Refs *refs, const std::string &name = "",
                                     bool return_types = true,
                                     bool function_attributes = true);
+std::string type(const std::string &s, size_t *offset, Refs *refs,
+                 const std::string &name = "", bool return_types = true,
+                 bool function_attributes = true);
+
+
+// Can throw if not a function.
+std::string type_function(const std::string s, size_t *offset, Refs *refs, const std::string &name, bool return_types, bool function_attributes) {
+  // TypeFunction
+
+  // TODO(baryluk): If calling convention is non-D, this is not correct. int
+  // extern(C)(int, int);
+  size_t offset2 = *offset;
+  const std::string function_signature = type_function_no_return(
+      s, &offset2, refs, "", return_types, function_attributes);
+  *offset = offset2;
+
+  const std::string return_type =
+      type(s, offset, refs, "", return_types, function_attributes);
+
+  std::string ret;
+  if (name.size()) {
+    if (return_types && return_type.size()) {
+      ret += return_type;
+      ret += ' ';
+    }
+    ret += name;
+    ret += ' ';
+    ret += function_signature;
+  } else {
+    if (return_types && return_type.size()) {
+      ret += return_type;
+      // ret += ' ';
+    }
+    ret += function_signature;
+  }
+  return ret;
+}
 
 // We provide name, in case of parsing functions.
 // This is because functions are of the form:  func_attrs return_type name
 // params. But in mangled stream it is name fun_attrs params return_type
 std::string type(const std::string &s, size_t *offset, Refs *refs,
-                 const std::string &name = "", bool return_types = true,
-                 bool function_attributes = true) {
+                 const std::string &name, bool return_types,
+                 bool function_attributes) {
   if (!canread1(s, offset)) {
     DEMANGLE_D_DEBUG(NOT_type);
     throw std::runtime_error("Cannot demangle type - missing TypeX");
@@ -755,6 +796,7 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
     return back_reference(s, offset, refs);
   }
   std::string ret = type_modifiers(s, offset);
+  const bool has_type_modifiers = ret.size() > 0;
   bool basic = false;
   // TypeX
   if (startswith(s, 'A', offset)) {
@@ -793,14 +835,14 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
     ret += type(s, offset, refs);
     ret += ')';
   } else if (startswith(s, 'I', offset) || startswith(s, 'C', offset) ||
-             startswith(s, 'S', offset) || startswith(s, "E", offset) ||
+             startswith(s, 'S', offset) || startswith(s, 'E', offset) ||
              startswith(s, 'T', offset)) {
     // TypeIdent, TypeClass, TypeStruct, TypeEnum, TypeTypedef
     ret += qualified_name(s, offset, refs, return_types, function_attributes);
   } else if (startswith(s, 'D', offset)) {
     // TypeDelegate
     std::string o = type_modifiers(s, offset);  // optional
-    ret += qualified_name(s, offset, refs, return_types, function_attributes);
+    ret += type_function(s, offset, refs, "", return_types, function_attributes);
     ret += " delegate";
     ret += o;
   } else if (startswith(s, 'v', offset)) {
@@ -891,6 +933,21 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
     ret += parameters(s, offset, refs);
   } else {
     DEMANGLE_D_DEBUG(type_fallbackt_to_type_function);
+
+    try {
+      size_t offset2 = *offset;
+      std::string function = type_function(s, &offset2, refs, name, return_types, function_attributes);
+      *offset = offset2;
+      ret += function;
+    } catch (const std::runtime_error &e) {
+      ret += qualified_name(s, offset, refs, return_types, function_attributes);
+
+      // Store type reference for back reference lookups.
+      (*refs)[start_offset] = ret;
+      return ret;
+    }
+
+/*
     std::string function_signature;
     // TypeFunction
     try {
@@ -928,14 +985,16 @@ std::string type(const std::string &s, size_t *offset, Refs *refs,
       }
       ret += function_signature;
     }
+*/
   }
 
-  if (!basic) {
+  if (!basic || has_type_modifiers) {
     // Store type reference for back reference lookups.
     (*refs)[start_offset] = ret;
   }
   return ret;
 }
+
 
 std::string type_function_no_return(const std::string &s, size_t *offset,
                                     Refs *refs, const std::string &name,

@@ -26,12 +26,9 @@ _D3std9algorithm8mutation__T11moveEmplaceTASQBq8datetime8timezone13PosixTimeZone
 
 _D3std3uni10safeRead24FNaNbNiMxPhmZk uint std.uni.safeRead24(scope const ubyte*, ulong) pure nothrow @nogc
 
-# This currently causes infinite loop:
 _D4core8internal5array8capacity__T22_d_arraysetlengthTImplHTAPmTQdZ18_d_arraysetlengthTFNaNbNeMNkKQBmmZm ulong core.internal.array.capacity._d_arraysetlengthTImpl!(ulong*[], ulong*)._d_arraysetlengthT(scope return ref ulong*[], ulong) pure nothrow @trusted
 
-# This currently causes infinite loop:
-_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi int delegate  gc.impl.conservative.gc.ConservativeGC.rootIter() @property @nogc (scope delegate , int (ref gc.gcinterface.Root) nothrow) delegate  gc.impl.conservative.gc.ConservativeGC.rootIter() @property @nogc
-# c++filt: gc.impl.conservative.gc.ConservativeGC.rootIter()  # This looks like an issue in return type.
+_D2gc4impl12conservative2gc14ConservativeGC8rootIterMFNdNiZDFMDFNbKS2gc11gcinterface4RootZiZi int(scope int(ref gc.gcinterface.Root) nothrow delegate) delegate gc.impl.conservative.gc.ConservativeGC.rootIter() @property @nogc
 
 # Inner function in a method. Pretty bad demangle.
 _D7example1X5cloneMxFCQuQoQfZ1xMFNaNbNiNfZi int x() pure nothrow @nogc @safe example.X.clone(example.X.) const
@@ -59,19 +56,18 @@ _D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap6removeMFNbNi
 # Should be (+types): rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.remove(gc.gcinterface.Root)
 
 # Causes infinite loop
-_D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap7opApplyMFNbMDFNbKS2gc11gcinterface4RootZiZi int rt.util.container.treap.__T5TreapTS2gc11gcinterface4RootZ.Treap.opApply(scope delegate , int (ref gc.gcinterface.Root) nothrow) nothrow
-# Should be (+types): rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.opApply(scope int(ref gc.gcinterface.Root) nothrow delegate)
+_D2rt4util9container5treap33__T5TreapTS2gc11gcinterface4RootZ5Treap7opApplyMFNbMDFNbKS2gc11gcinterface4RootZiZi int rt.util.container.treap.__T5TreapTS2gc11gcinterface4RootZ.Treap.opApply(scope int(ref gc.gcinterface.Root) nothrow delegate) nothrow
+# Should be (+types):                                                                                                     rt.util.container.treap.Treap!(gc.gcinterface.Root).Treap.opApply(scope int(ref gc.gcinterface.Root) nothrow delegate)
 
-_D6object9Throwable8toStringMxFMDFxAaZvZv void object.Throwable.toString(scope delegate , void (const char[])) const
-# Should be: object.Throwable.toString(scope void(const(char[])) delegate) const
+_D6object9Throwable8toStringMxFMDFxAaZvZv void object.Throwable.toString(scope void(const char[]) delegate) const
+# Should be:                                   object.Throwable.toString(scope void(const(char[])) delegate) const
 
 _D4core5cpuid18getcacheinfoCPUID2FNbNiNeZ14decipherCpuid2MFNbNihZ3idsyG63h immutable ubyte[63] ids decipherCpuid2(ubyte) nothrow @nogc core.cpuid.getcacheinfoCPUID2() nothrow @nogc @trusted
 
-_D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread core.thread.Thread core.thread.ThreadGroup.create(delegate , void ())
-# $ c++filt:                                                                     core.thread.ThreadGroup.create(void() delegate)
+_D4core6thread11ThreadGroup6createMFDFZvZC4core6thread6Thread core.thread.Thread core.thread.ThreadGroup.create(void() delegate)
 
 # Could be better:
-_D6object39__T12_getPostblitTC4core6thread6ThreadZ12_getPostblitFNaNbNiNeZDFNaNbNiNfKC4core6thread6ThreadZv void delegate  object.__T12_getPostblitTC4core6thread6ThreadZ._getPostblit() pure nothrow @nogc @trusted (ref core.thread.Thread) pure nothrow @nogc @safe delegate  object.__T12_getPostblitTC4core6thread6ThreadZ._getPostblit() pure nothrow @nogc @trusted
+_D6object39__T12_getPostblitTC4core6thread6ThreadZ12_getPostblitFNaNbNiNeZDFNaNbNiNfKC4core6thread6ThreadZv void(ref core.thread.Thread) pure nothrow @nogc @safe delegate object.__T12_getPostblitTC4core6thread6ThreadZ._getPostblit() pure nothrow @nogc @trusted
 _D6object70__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZ6valuesFNaNbNdHAyaC3std3zip13ArchiveMemberZAC3std3zip13ArchiveMember std.zip.ArchiveMember[] object.__T6valuesHTHAyaC3std3zip13ArchiveMemberTC3std3zip13ArchiveMemberTAyaZ.values(std.zip.ArchiveMember[immutable char[]]) pure nothrow @property
 
 # Input: _D4core8demangle37__T8DemangleTS4core8demangle7NoHooksZ8Demangle5shiftMFNaNiNfAxaZAa
